@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Fansware — Bugs & Configs</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{color-scheme:dark;--bg:#07070b;--panel:#121218;--line:#2a2a36;--text:#ececf1;--muted:#9a9aaa;--blue:#3b6cff;--blue-soft:#8aa4ff;--green:#3dd68c;--yellow:#f5c542;--red:#ff5c6c}
+*{box-sizing:border-box}
+body{margin:0;font-family:Outfit,system-ui,sans-serif;background:var(--bg);color:var(--text);background-image:radial-gradient(900px 420px at 80% -10%,rgba(59,108,255,.2),transparent 60%),linear-gradient(#07070b,#0b0b12);min-height:100vh}
+a{color:inherit;text-decoration:none}
+header,main{max-width:1100px;margin:0 auto;padding:20px 24px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{width:36px;height:36px;border-radius:8px;background:var(--blue);display:grid;place-items:center;font-weight:700}
+.sub{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--muted)}
+nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.btn{background:var(--blue);color:#fff;border:0;border-radius:999px;padding:9px 14px;font:inherit;cursor:pointer;display:inline-block;font-size:13px}
+.btn:hover{filter:brightness(1.08)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.ghost{background:transparent;border:1px solid rgba(255,255,255,.15);color:#d6d6e0}
+.danger{background:#3a1a22;border:1px solid #6a2a36;color:#ffb0ba}
+.ok{background:#163226;border:1px solid #2a6a4a;color:#b6f0d0}
+.pill{border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:6px 12px;font-size:13px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+.muted{color:var(--muted);font-size:14px}
+h1{font-size:clamp(28px,5vw,40px);margin:0 0 8px;letter-spacing:-.02em}
+h2{margin:0 0 12px;font-size:20px}
+h3{margin:0 0 8px;font-size:16px;color:var(--blue-soft)}
+.tabs{display:flex;gap:8px;margin:18px 0 14px;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:#15151d;color:#c8c8d4;border-radius:999px;padding:8px 14px;cursor:pointer;font:inherit;font-size:13px}
+.tab.active{background:#1a2240;border-color:#3b6cff;color:#fff}
+.panel{display:none}.panel.active{display:block}
+.grid{display:grid;gap:12px}.cols{grid-template-columns:repeat(2,1fr)}
+.list{list-style:none;padding:0;margin:0}
+.list li{padding:10px 0;border-bottom:1px solid #222230;font-size:14px;color:#cfcfd8}
+.list li:last-child{border-bottom:0}
+.field{margin:10px 0}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;background:#14141c;border:1px solid #303044;color:#eee;border-radius:8px;padding:10px;font:inherit;font-size:13px}
+.field textarea{min-height:100px;resize:vertical}
+.msg{font-size:13px;color:var(--muted);min-height:18px;margin-top:8px}
+.msg.ok{color:var(--green)}.msg.err{color:var(--red)}
+.user-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:4px 10px 4px 4px;font-size:13px}
+.user-chip img{width:24px;height:24px;border-radius:50%}
+.badge{display:inline-block;font-size:11px;border-radius:999px;padding:3px 8px;font-family:"IBM Plex Mono",monospace}
+.badge.free{background:#1a2a3a;color:#9ec5ff}.badge.paid{background:#2a2410;color:#f5c542}
+.badge.open{background:#1a2a3a;color:#9ec5ff}.badge.closed{background:#163226;color:#b6f0d0}
+.price{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--blue-soft)}
+.cfg-actions{display:flex;gap:8px;flex-wrap:wrap}
+code{font-family:"IBM Plex Mono",monospace;font-size:12px;background:#1a1a24;padding:2px 6px;border-radius:4px}
+.row-pay{display:grid;grid-template-columns:1.2fr .8fr auto;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid #222230}
+.subtabs{display:flex;gap:6px;margin:0 0 14px;flex-wrap:wrap}
+.subtab{border:0;background:#181822;color:#aaa;border-radius:8px;padding:8px 12px;cursor:pointer;font:inherit;font-size:13px}
+.subtab.active{background:#222233;color:#fff}
+.hidden{display:none !important}
+.issue{padding:12px 0;border-bottom:1px solid #222230}
+.issue:last-child{border-bottom:0}
+.issue a{color:var(--blue-soft)}
+.issue .meta{font-size:12px;color:var(--muted);margin-top:4px}
+.device-box{background:#14141c;border:1px solid #303044;border-radius:10px;padding:14px;margin-top:10px}
+.device-code{font-family:"IBM Plex Mono",monospace;font-size:22px;letter-spacing:.12em;color:#fff;margin:8px 0}
+footer{margin:40px auto 24px;max-width:1100px;padding:16px 24px 0;border-top:1px solid var(--line);color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:13px}
+@media(max-width:800px){.cols{grid-template-columns:1fr}}
+
+/* lo-fi ambient layer */
+.fx-layer{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.fx-blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.35;animation:fxFloat 18s ease-in-out infinite}
+.fx-blob.b1{width:420px;height:420px;left:-80px;top:-60px;background:radial-gradient(circle at 30% 30%,rgba(59,108,255,.55),transparent 70%);animation-duration:22s}
+.fx-blob.b2{width:360px;height:360px;right:-60px;top:20%;background:radial-gradient(circle at 60% 40%,rgba(141,100,255,.4),transparent 70%);animation-duration:26s;animation-delay:-6s}
+.fx-blob.b3{width:300px;height:300px;left:35%;bottom:-80px;background:radial-gradient(circle at 50% 50%,rgba(61,214,140,.22),transparent 70%);animation-duration:20s;animation-delay:-10s}
+.fx-grain{position:absolute;inset:0;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:fxGrain 1.2s steps(2) infinite}
+@keyframes fxFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-24px) scale(1.05)}66%{transform:translate(-20px,18px) scale(.96)}}
+@keyframes fxGrain{0%,100%{transform:translate(0,0)}50%{transform:translate(-1%,1%)}}
+@keyframes softIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+header,main,footer{position:relative;z-index:1}
+.card,.box,.ui-shell,.panel .card{animation:softIn .55s ease both}
+.hero > div:first-child{animation:softIn .6s ease both}
+.hero > div:last-child{animation:softIn .7s .08s ease both}
+.btn,.tab,.subtab,.ghost,.pill{transition:transform .15s ease,filter .15s ease,background .15s ease,border-color .15s ease}
+.btn:hover,.tab:hover,.subtab:hover{transform:translateY(-1px)}
+.status-dot.ok{animation:pulseOk 2.4s ease-in-out infinite}
+@keyframes pulseOk{0%,100%{box-shadow:0 0 12px rgba(61,214,140,.55),0 0 0 4px rgba(61,214,140,.12)}50%{box-shadow:0 0 18px rgba(61,214,140,.75),0 0 0 6px rgba(61,214,140,.18)}}
+.music-toggle{position:fixed;right:18px;bottom:18px;z-index:50;display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.14);background:rgba(18,18,24,.88);backdrop-filter:blur(10px);color:#e8e8f2;border-radius:999px;padding:10px 14px;font:inherit;font-size:13px;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.music-toggle:hover{filter:brightness(1.08)}
+.music-toggle .eq{display:inline-flex;align-items:flex-end;gap:2px;height:14px}
+.music-toggle .eq i{display:block;width:3px;background:var(--blue-soft,#8aa4ff);border-radius:2px;height:4px;animation:eq 1s ease-in-out infinite}
+.music-toggle .eq i:nth-child(1){animation-delay:0s}.music-toggle .eq i:nth-child(2){animation-delay:.15s;height:8px}.music-toggle .eq i:nth-child(3){animation-delay:.3s;height:12px}.music-toggle .eq i:nth-child(4){animation-delay:.45s;height:6px}
+.music-toggle.off .eq i{animation:none;height:3px;opacity:.45}
+@keyframes eq{0%,100%{transform:scaleY(.55)}50%{transform:scaleY(1)}}
+@media (prefers-reduced-motion:reduce){
+  .fx-blob,.fx-grain,.status-dot.ok,.music-toggle .eq i,.card,.box,.ui-shell,.panel .card,.hero > div{animation:none!important}
+}
+
+</style>
+</head>
+<body>
+
+<div class="fx-layer" aria-hidden="true">
+  <div class="fx-blob b1"></div>
+  <div class="fx-blob b2"></div>
+  <div class="fx-blob b3"></div>
+  <div class="fx-grain"></div>
+</div>
+<button type="button" class="music-toggle off" id="musicToggle" title="Lo-fi">
+  <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+  <span id="musicLabel">lo-fi off</span>
+</button>
+
+<header>
+  <div class="brand"><div class="logo">F</div><div><b>Fansware</b><div class="sub">bugs · configs</div></div></div>
+  <nav>
+    <a class="btn ghost" href="index.html">HOME</a>
+    <a class="pill" href="https://discord.gg/g9UAV8xC2p" target="_blank" rel="noopener">Discord</a>
+    <span id="authArea"></span>
+  </nav>
+</header>
+<main>
+  <h1>Bugs & Configs</h1>
+  <p class="muted">Report bugs with your GitHub account (no token). Free configs last 12h in-script. Paid configs are permanent after admin approval.</p>
+  <div class="tabs">
+    <button class="tab active" data-main="bugs" type="button">Bugs</button>
+    <button class="tab" data-main="configs" type="button">Configs</button>
+    <button class="tab hidden" id="tabAdmin" data-main="admin" type="button">Admin</button>
+  </div>
+
+  <!-- BUGS -->
+  <section class="panel active" id="panel-bugs">
+    <div class="subtabs" id="bugsSub">
+      <button class="subtab active" data-sub="list" type="button">Open reports</button>
+      <button class="subtab" data-sub="report" type="button">Report a bug</button>
+      <button class="subtab" data-sub="faq" type="button">FAQ</button>
+    </div>
+
+    <div id="bugs-list" class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+        <h2 style="margin:0">Bug reports</h2>
+        <button class="btn ghost" id="btnRefreshIssues" type="button">Refresh</button>
+      </div>
+      <p class="muted" style="margin:8px 0 0">Public issues on the repo. Staff closes them when fixed.</p>
+      <div id="issueList" style="margin-top:12px">Loading…</div>
+    </div>
+
+    <div id="bugs-report" class="card hidden">
+      <h2>Report a bug</h2>
+      <p class="muted">Sign in with GitHub (account login — no personal token). Opens an issue labeled <code>bug</code>.</p>
+      <div id="reportNeedLogin" class="device-box hidden">
+        <div class="muted">Not signed in</div>
+        <button class="btn" id="btnStartLoginFromReport" type="button" style="margin-top:10px">Sign in with GitHub</button>
+      </div>
+      <div id="reportForm">
+        <div class="field">
+          <label>Title</label>
+          <input id="bugTitle" type="text" maxlength="120" placeholder="Short title — e.g. Aimbot stops after respawn"/>
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <textarea id="bugBody" placeholder="What happened, executor, place, steps to reproduce…"></textarea>
+        </div>
+        <div class="field">
+          <label>Executor (optional)</label>
+          <input id="bugExecutor" type="text" placeholder="Synapse / Wave / Solara / …"/>
+        </div>
+        <button class="btn" id="btnReport" type="button">Submit report</button>
+        <p class="msg" id="bugMsg"></p>
+      </div>
+    </div>
+
+    <div id="bugs-faq" class="card hidden">
+      <h2>FAQ</h2>
+      <ul class="list">
+        <li><b>Script load</b> — use the raw.githubusercontent.com loader URL.</li>
+        <li><b>Menu</b> — Right Shift.</li>
+        <li><b>Free config</b> — Get free pack → Import in script Settings. Tagged <code>[time: 12h]</code>. When time ends the script disables features.</li>
+        <li><b>Paid</b> — Discord + admin Pay it on your GitHub name. No timer.</li>
+        <li><b>Sign in</b> — users use GitHub account login (device code). Token field is admin-only.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CONFIGS -->
+  <section class="panel" id="panel-configs">
+    <div class="grid cols">
+      <article class="card">
+        <h3>Rage configs</h3>
+        <p class="muted">Aggressive packs.</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+          <span class="badge free">#1 free · 12h</span>
+          <span class="badge paid">#2 · $1.00</span>
+        </div>
+        <p class="price">Free = 12h → 5h cooldown → 5 ads</p>
+        <p class="muted" id="freeRageStatus" style="font-size:12px"></p>
+        <div class="cfg-actions" style="margin-top:12px">
+          <button class="btn" id="btnRage1" type="button">Get Rage #1 (free 12h)</button>
+          <button class="btn ghost" id="btnRageAd" type="button">Watch ad (0/5)</button>
+          <button class="btn ghost" id="btnRage2" type="button">Get Rage #2 ($1)</button>
+        </div>
+        <pre id="outRage" class="hidden" style="margin-top:12px;padding:12px;background:#0e0e14;border-radius:8px;overflow:auto;font-size:12px;color:#d7e2ff"></pre>
+        <p class="msg" id="msgRage"></p>
+      </article>
+      <article class="card">
+        <h3>Legit configs</h3>
+        <p class="muted">Cleaner locks.</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+          <span class="badge free">#1 free · 12h</span>
+          <span class="badge paid">#2 · $1.50</span>
+        </div>
+        <p class="price">Free = 12h → 5h cooldown → 5 ads</p>
+        <p class="muted" id="freeLegitStatus" style="font-size:12px"></p>
+        <div class="cfg-actions" style="margin-top:12px">
+          <button class="btn" id="btnLegit1" type="button">Get Legit #1 (free 12h)</button>
+          <button class="btn ghost" id="btnLegitAd" type="button">Watch ad (0/5)</button>
+          <button class="btn ghost" id="btnLegit2" type="button">Get Legit #2 ($1.50)</button>
+        </div>
+        <pre id="outLegit" class="hidden" style="margin-top:12px;padding:12px;background:#0e0e14;border-radius:8px;overflow:auto;font-size:12px;color:#d7e2ff"></pre>
+        <p class="msg" id="msgLegit"></p>
+      </article>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h3>How paid works</h3>
+      <ol class="muted" style="margin:8px 0 0;padding-left:18px;line-height:1.6">
+        <li>Join Discord</li>
+        <li>Pay ($1 / $1.50) in Discord</li>
+        <li>Give staff your GitHub username</li>
+        <li>Admin marks Pay it → permanent unlock</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section class="panel" id="panel-admin">
+    <div class="card">
+      <h2>Admin — payments</h2>
+      <p class="muted">Fansware only. Token login is admin-only. Writes <code>docs/entitlements.json</code>.</p>
+      <div class="field"><label>GitHub username (buyer)</label><input id="payUser" type="text"/></div>
+      <div class="field"><label>Config</label>
+        <select id="payProduct"><option value="rage2">Rage #2</option><option value="legit2">Legit #2</option></select>
+      </div>
+      <div class="field"><label>Note</label><input id="payNote" type="text"/></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn ok" id="btnPayIt" type="button">Pay it</button>
+        <button class="btn danger" id="btnRejectIt" type="button">Reject it</button>
+        <button class="btn ghost" id="btnReloadEnt" type="button">Reload</button>
+      </div>
+      <p class="msg" id="adminPayMsg"></p>
+      <h3 style="margin-top:18px">Entitlements</h3>
+      <div id="entList" class="muted">—</div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <h3>Admin token login</h3>
+      <p class="muted" style="margin-top:0">Only for <b>Fansware</b>. Users should use <b>Sign in with GitHub</b> (device code), not a token.</p>
+      <div class="field"><label>GitHub token (admin)</label><input id="tokenInput" type="password" autocomplete="off"/></div>
+      <button class="btn" id="btnLogin" type="button">Admin sign in</button>
+      <button class="btn ghost danger" id="btnLogout" type="button">Log out</button>
+      <p class="msg" id="loginMsg"></p>
+    </div>
+  </section>
+</main>
+
+<!-- login modal -->
+<div id="loginModal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,.65);display:grid;place-items:center;z-index:50;padding:16px">
+  <div class="card" style="max-width:420px;width:100%">
+    <h2>Sign in with GitHub</h2>
+    <p class="muted" style="margin-top:0">No personal token. Approve a one-time device code on GitHub.</p>
+    <div id="deviceStep">
+      <p class="muted">Starting…</p>
+    </div>
+    <p class="msg" id="deviceMsg"></p>
+    <button class="btn ghost" id="btnCloseLogin" type="button" style="margin-top:8px">Cancel</button>
+  </div>
+</div>
+
+<footer><span>Fansware portal</span><a href="index.html">HOME</a></footer>
+<script>
+const ADMIN_LOGIN="Fansware";
+const REPO_OWNER="Fansware";
+const REPO_NAME="something2";
+const BRANCH="main";
+const ENT_PATH="docs/entitlements.json";
+const LS_TOKEN="fansware_gh_token";
+const LS_USER_TOKEN="fansware_user_token";
+/* OAuth App (public device-flow client). Create under GitHub → Settings → Developer settings → OAuth Apps
+   Enable Device Flow. Put the client id here. */
+const OAUTH_CLIENT_ID = "Ov23liREPLACE_ME"; // <-- set your OAuth App client id
+const FREE_WINDOW_MS=12*3600*1000, FREE_COOLDOWN_MS=5*3600*1000, FREE_ADS_REQUIRED=5;
+const FREE_TIME_TAG="[time: 12h]", LS_FREE="fansware_free_cfg_v1";
+const CONFIGS={
+  rage1:{name:"Rage #1",require:"free",freeKey:"rage1",body:`--FANWARE_CFG--{["Aimbot"]=true,["AimbotTarget"]="Head",["AimbotSmoothness"]=3,["AimbotStickiness"]=7,["AimbotFOV"]=450,["AimbotMaxDist"]=1200,["AimbotWallCheck"]=false,["AimbotTeamCheck"]=true,["TriggerBot"]=true,["TriggerBotDelay"]=0.04,["DeathLock"]=true,["DeathLockUltra"]=true,["AutoShoot"]=true,["ESP"]=true,["Boxes"]=true,["Tracers"]=true,["SpeedHack"]=true,["SpeedPower"]=90,}--END--`},
+  rage2:{name:"Rage #2",require:"paid",product:"rage2",body:`--FANWARE_CFG--{["Aimbot"]=true,["AimbotTarget"]="Nearest",["AimbotSmoothness"]=2,["AimbotStickiness"]=8,["AimbotFOV"]=600,["AimbotMaxDist"]=1500,["AimbotWallCheck"]=false,["TriggerBot"]=true,["DeathLock"]=true,["DeathLockUltra"]=true,["AutoShoot"]=true,["ESP"]=true,["Boxes"]=true,["Skeleton"]=true,["Tracers"]=true,["TPBehind"]=true,["SpeedHack"]=true,["SpeedPower"]=100,["Noclip"]=true,["Fly"]=true,["FlySpeed"]=80,["SpinBot"]=true,}--END--`},
+  legit1:{name:"Legit #1",require:"free",freeKey:"legit1",body:`--FANWARE_CFG--{["Aimbot"]=true,["AimbotTarget"]="Head",["AimbotSmoothness"]=12,["AimbotStickiness"]=4,["AimbotFOV"]=120,["AimbotMaxDist"]=600,["AimbotWallCheck"]=true,["TriggerBot"]=true,["TriggerBotDelay"]=0.09,["ESP"]=true,["Boxes"]=true,["ShowNames"]=true,}--END--`},
+  legit2:{name:"Legit #2",require:"paid",product:"legit2",body:`--FANWARE_CFG--{["Aimbot"]=true,["AimbotTarget"]="Head",["AimbotSmoothness"]=9,["AimbotStickiness"]=5,["AimbotFOV"]=160,["AimbotMaxDist"]=700,["AimbotWallCheck"]=true,["TriggerBot"]=true,["DeathLock"]=true,["ESP"]=true,["Boxes"]=true,["Skeleton"]=true,["Tracers"]=true,["ShowLife"]=true,["ShowNames"]=true,}--END--`}
+};
+let authUser=null, authToken=null, authMode=null; // "user" | "admin"
+let entitlements={users:{}};
+let devicePollTimer=null;
+
+function $(id){return document.getElementById(id)}
+async function api(path, opts={}){
+  return fetch("https://api.github.com"+path,{
+    ...opts,
+    headers:{
+      "Accept":"application/vnd.github+json",
+      "X-GitHub-Api-Version":"2022-11-28",
+      ...(authToken?{"Authorization":"Bearer "+authToken}:{}),
+      ...(opts.headers||{})
+    }
+  });
+}
+function utf8ToBase64(str){return btoa(unescape(encodeURIComponent(str)))}
+
+function setAuthUI(){
+  const area=$("authArea");
+  const isAdmin=authUser && authUser.login===ADMIN_LOGIN && authMode==="admin";
+  if(authUser){
+    area.innerHTML=`<span class="user-chip"><img src="${authUser.avatar_url}" alt=""/><span>${authUser.login}</span></span>
+      <button class="btn ghost" id="btnLogoutTop" type="button">Log out</button>`;
+    $("btnLogoutTop").onclick=logout;
+  } else {
+    area.innerHTML=`<button class="btn ghost" id="btnShowLogin" type="button">Sign in with GitHub</button>`;
+    $("btnShowLogin").onclick=()=>openLoginModal();
+  }
+  $("tabAdmin").classList.toggle("hidden", !isAdmin);
+  const need=$("reportNeedLogin");
+  const form=$("reportForm");
+  if(need && form){
+    const signed=!!authUser;
+    need.classList.toggle("hidden", signed);
+    form.classList.toggle("hidden", !signed);
+  }
+  if(isAdmin) loadEntitlements(true);
+}
+
+async function applyToken(token, mode){
+  authToken=token;
+  authMode=mode;
+  const res=await api("/user");
+  if(!res.ok){
+    authToken=null; authMode=null;
+    throw new Error("Login failed ("+res.status+")");
+  }
+  authUser=await res.json();
+  if(mode==="admin"){
+    if(authUser.login!==ADMIN_LOGIN){
+      authToken=null; authUser=null; authMode=null;
+      throw new Error("This token is not the Fansware admin account.");
+    }
+    localStorage.setItem(LS_TOKEN, token);
+    localStorage.removeItem(LS_USER_TOKEN);
+  } else {
+    localStorage.setItem(LS_USER_TOKEN, token);
+    localStorage.removeItem(LS_TOKEN);
+  }
+  setAuthUI();
+}
+
+function logout(){
+  authUser=null; authToken=null; authMode=null;
+  localStorage.removeItem(LS_TOKEN);
+  localStorage.removeItem(LS_USER_TOKEN);
+  if(devicePollTimer){ clearInterval(devicePollTimer); devicePollTimer=null; }
+  setAuthUI();
+  $("loginMsg").textContent="";
+  closeLoginModal();
+}
+
+async function tryRestore(){
+  const admin=localStorage.getItem(LS_TOKEN);
+  const user=localStorage.getItem(LS_USER_TOKEN);
+  try{
+    if(admin){ await applyToken(admin, "admin"); return; }
+    if(user){ await applyToken(user, "user"); return; }
+  }catch{
+    localStorage.removeItem(LS_TOKEN);
+    localStorage.removeItem(LS_USER_TOKEN);
+  }
+  setAuthUI();
+}
+
+/* device flow — user account login (no pasted token) */
+function openLoginModal(){
+  const m=$("loginModal");
+  m.classList.remove("hidden");
+  m.style.display="grid";
+  startDeviceFlow();
+}
+function closeLoginModal(){
+  const m=$("loginModal");
+  m.classList.add("hidden");
+  m.style.display="none";
+  if(devicePollTimer){ clearInterval(devicePollTimer); devicePollTimer=null; }
+}
+$("btnCloseLogin").onclick=closeLoginModal;
+$("btnStartLoginFromReport").onclick=()=>openLoginModal();
+
+async function startDeviceFlow(){
+  const box=$("deviceStep");
+  const msg=$("deviceMsg");
+  msg.className="msg"; msg.textContent="";
+  if(!OAUTH_CLIENT_ID || OAUTH_CLIENT_ID.includes("REPLACE")){
+    box.innerHTML=`<p class="msg err">OAuth client id not set yet. Admin: create a GitHub OAuth App with Device Flow, put the client id in <code>OAUTH_CLIENT_ID</code>.</p>
+      <p class="muted">Meanwhile admin can still use the token field on the Admin tab.</p>`;
+    return;
+  }
+  box.innerHTML=`<p class="muted">Requesting device code…</p>`;
+  try{
+    const res=await fetch("https://github.com/login/device/code",{
+      method:"POST",
+      headers:{"Accept":"application/json","Content-Type":"application/json"},
+      body:JSON.stringify({client_id:OAUTH_CLIENT_ID, scope:"public_repo read:user"})
+    });
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.error_description || data.error || ("HTTP "+res.status));
+    box.innerHTML=`
+      <p class="muted">1. Open GitHub device login</p>
+      <p><a class="btn" href="${data.verification_uri}" target="_blank" rel="noopener">github.com/login/device</a></p>
+      <p class="muted" style="margin-top:12px">2. Enter this code</p>
+      <div class="device-code">${data.user_code}</div>
+      <p class="muted">Waiting for approval…</p>`;
+    if(devicePollTimer) clearInterval(devicePollTimer);
+    const started=Date.now();
+    devicePollTimer=setInterval(async()=>{
+      if(Date.now()-started > (data.expires_in||900)*1000){
+        clearInterval(devicePollTimer); devicePollTimer=null;
+        msg.className="msg err"; msg.textContent="Code expired — try again.";
+        return;
+      }
+      try{
+        const pr=await fetch("https://github.com/login/oauth/access_token",{
+          method:"POST",
+          headers:{"Accept":"application/json","Content-Type":"application/json"},
+          body:JSON.stringify({client_id:OAUTH_CLIENT_ID, device_code:data.device_code, grant_type:"urn:ietf:params:oauth:grant-type:device_code"})
+        });
+        const tok=await pr.json();
+        if(tok.error==="authorization_pending" || tok.error==="slow_down") return;
+        if(tok.error){ throw new Error(tok.error_description || tok.error); }
+        if(tok.access_token){
+          clearInterval(devicePollTimer); devicePollTimer=null;
+          await applyToken(tok.access_token, "user");
+          msg.className="msg ok"; msg.textContent="Signed in as "+authUser.login;
+          setTimeout(closeLoginModal, 700);
+        }
+      }catch(e){
+        clearInterval(devicePollTimer); devicePollTimer=null;
+        msg.className="msg err"; msg.textContent=e.message||String(e);
+      }
+    }, (data.interval||5)*1000);
+  }catch(e){
+    box.innerHTML=`<p class="msg err">${e.message||String(e)}</p>`;
+  }
+}
+
+/* admin token only */
+$("btnLogin").onclick=async()=>{
+  const msg=$("loginMsg");
+  msg.className="msg"; msg.textContent="Checking…";
+  try{
+    await applyToken($("tokenInput").value.trim(), "admin");
+    msg.className="msg ok"; msg.textContent="Admin signed in as "+authUser.login;
+    $("tokenInput").value="";
+  }catch(e){
+    msg.className="msg err"; msg.textContent=e.message||String(e);
+  }
+};
+$("btnLogout").onclick=logout;
+
+/* tabs */
+function switchMain(name){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.main===name));
+  document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active", p.id==="panel-"+name));
+}
+document.querySelector(".tabs").onclick=(e)=>{
+  const t=e.target.closest(".tab");
+  if(!t || t.classList.contains("hidden")) return;
+  switchMain(t.dataset.main);
+};
+function switchBugs(sub){
+  document.querySelectorAll("#bugsSub .subtab").forEach(t=>t.classList.toggle("active", t.dataset.sub===sub));
+  ["list","report","faq"].forEach(s=>{
+    const el=$("bugs-"+s);
+    if(el) el.classList.toggle("hidden", s!==sub);
+  });
+  if(sub==="list") loadIssues();
+  if(sub==="report") setAuthUI();
+}
+$("bugsSub").onclick=(e)=>{
+  const t=e.target.closest(".subtab");
+  if(!t) return;
+  switchBugs(t.dataset.sub);
+};
+
+/* issues list + report */
+async function loadIssues(){
+  const box=$("issueList");
+  if(!box) return;
+  box.textContent="Loading…";
+  try{
+    const res=await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?state=all&labels=bug&per_page=30`);
+    if(!res.ok) throw new Error("GitHub "+res.status);
+    const items=await res.json();
+    if(!items.length){
+      box.innerHTML=`<p class="muted">No bug reports yet.</p>`;
+      return;
+    }
+    box.innerHTML=items.map(it=>{
+      const state=it.state==="open"?'<span class="badge open">open</span>':'<span class="badge closed">closed</span>';
+      const who=it.user?it.user.login:"?";
+      const when=(it.created_at||"").slice(0,10);
+      return `<div class="issue">
+        <div>${state} <a href="${it.html_url}" target="_blank" rel="noopener"><b>#${it.number}</b> ${escapeHtml(it.title)}</a></div>
+        <div class="meta">@${escapeHtml(who)} · ${when}</div>
+      </div>`;
+    }).join("");
+  }catch(e){
+    box.innerHTML=`<p class="msg err">${escapeHtml(e.message||String(e))}</p>`;
+  }
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+$("btnRefreshIssues").onclick=()=>loadIssues();
+
+$("btnReport").onclick=async()=>{
+  const msg=$("bugMsg");
+  msg.className="msg";
+  if(!authUser || !authToken){
+    msg.className="msg err"; msg.textContent="Sign in with GitHub first.";
+    openLoginModal();
+    return;
+  }
+  const title=($("bugTitle").value||"").trim();
+  const body=($("bugBody").value||"").trim();
+  const exec=($("bugExecutor").value||"").trim();
+  if(!title || !body){
+    msg.className="msg err"; msg.textContent="Title and description required.";
+    return;
+  }
+  msg.textContent="Submitting…";
+  const full = body + (exec?`\n\n**Executor:** ${exec}`:"") + `\n\n---\nReported by @${authUser.login} via Fansware portal`;
+  try{
+    const res=await api(`/repos/${REPO_OWNER}/${REPO_NAME}/issues`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({title, body:full, labels:["bug"]})
+    });
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(data.message || ("GitHub "+res.status));
+    msg.className="msg ok";
+    msg.textContent="Opened #"+data.number+" — thanks.";
+    $("bugTitle").value=""; $("bugBody").value=""; $("bugExecutor").value="";
+    switchBugs("list");
+    loadIssues();
+  }catch(e){
+    msg.className="msg err";
+    msg.textContent=e.message||String(e);
+  }
+};
+
+/* free config state */
+function loadFreeState(){try{const raw=localStorage.getItem(LS_FREE);if(!raw)return{slots:{}};const t=JSON.parse(raw);if(!t||typeof t!=="object")return{slots:{}};if(!t.slots)t.slots={};return t}catch{return{slots:{}}}}
+function saveFreeState(st){localStorage.setItem(LS_FREE,JSON.stringify(st))}
+function freeSlot(key){const st=loadFreeState();if(!st.slots[key])st.slots[key]={expiresAt:0,cooldownUntil:0,ads:0,lastClaim:0};return st.slots[key]}
+function formatRemain(ms){ms=Math.max(0,ms|0);const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;if(h>0)return h+"h "+m+"m";if(m>0)return m+"m "+sec+"s";return sec+"s"}
+function freeStatusText(key){const slot=freeSlot(key),now=Date.now();if(slot.expiresAt>now)return"ACTIVE — "+formatRemain(slot.expiresAt-now)+" left (script kills config when this ends)";if(slot.cooldownUntil>now)return"Cooldown "+formatRemain(slot.cooldownUntil-now)+" · then "+FREE_ADS_REQUIRED+" ads";return"Ads "+(slot.ads||0)+"/"+FREE_ADS_REQUIRED+" · ready after ads for a new 12h free config"}
+function refreshFreeUI(){const rage=$("freeRageStatus"),legit=$("freeLegitStatus");if(rage)rage.textContent=freeStatusText("rage1");if(legit)legit.textContent=freeStatusText("legit1");const br=$("btnRageAd"),bl=$("btnLegitAd");if(br)br.textContent="Watch ad ("+(freeSlot("rage1").ads||0)+"/"+FREE_ADS_REQUIRED+")";if(bl)bl.textContent="Watch ad ("+(freeSlot("legit1").ads||0)+"/"+FREE_ADS_REQUIRED+")"}
+function canClaimFree(key){const slot=freeSlot(key),now=Date.now();if(slot.expiresAt>now)return{ok:true,reason:"active"};if(slot.cooldownUntil>now)return{ok:false,reason:"cooldown "+formatRemain(slot.cooldownUntil-now)};if((slot.ads||0)<FREE_ADS_REQUIRED){if(!slot.lastClaim)return{ok:true,reason:"first"};return{ok:false,reason:"need "+(slot.ads||0)+"/"+FREE_ADS_REQUIRED+" ads"}}return{ok:true,reason:"ads-done"}}
+function claimFreeWindow(key){const st=loadFreeState();if(!st.slots[key])st.slots[key]={expiresAt:0,cooldownUntil:0,ads:0,lastClaim:0};const now=Date.now();st.slots[key].expiresAt=now+FREE_WINDOW_MS;st.slots[key].cooldownUntil=st.slots[key].expiresAt+FREE_COOLDOWN_MS;st.slots[key].ads=0;st.slots[key].lastClaim=now;saveFreeState(st);refreshFreeUI()}
+function watchFreeAd(key,msgId){const msg=$(msgId),slot=freeSlot(key),now=Date.now();msg.className="msg";if(slot.expiresAt>now){msg.className="msg err";msg.textContent="Window still active — ads not needed.";return}if(slot.cooldownUntil>now){msg.className="msg err";msg.textContent="Cooldown "+formatRemain(slot.cooldownUntil-now)+" — wait before ads.";return}msg.textContent="Ad playing… 4s";const btn=key==="rage1"?$("btnRageAd"):$("btnLegitAd");if(btn)btn.disabled=true;setTimeout(()=>{const st=loadFreeState();if(!st.slots[key])st.slots[key]={expiresAt:0,cooldownUntil:0,ads:0,lastClaim:0};st.slots[key].ads=Math.min(FREE_ADS_REQUIRED,(st.slots[key].ads||0)+1);saveFreeState(st);refreshFreeUI();if(btn)btn.disabled=false;msg.className="msg ok";msg.textContent=st.slots[key].ads>=FREE_ADS_REQUIRED?"Ads done — claim free config.":("Ad "+st.slots[key].ads+"/"+FREE_ADS_REQUIRED+" claimed.")},4000)}
+
+function hasPaid(login,product){if(!login)return false;const row=(entitlements.users||{})[login.toLowerCase()];return row&&row[product]==="paid"}
+async function loadEntitlements(){try{const res=await fetch("https://raw.githubusercontent.com/"+REPO_OWNER+"/"+REPO_NAME+"/"+BRANCH+"/"+ENT_PATH+"?t="+Date.now());if(res.ok){entitlements=await res.json();if(!entitlements.users)entitlements.users={}}}catch{}renderEntList()}
+function renderEntList(){const box=$("entList");if(!box)return;const users=Object.keys(entitlements.users||{});if(!users.length){box.textContent="—";return}box.innerHTML=users.map(u=>{const row=entitlements.users[u];const parts=[];if(row.rage2==="paid")parts.push("rage2✓");if(row.rage2==="rejected")parts.push("rage2✗");if(row.legit2==="paid")parts.push("legit2✓");if(row.legit2==="rejected")parts.push("legit2✗");return `<div class="row-pay"><span><b>${u}</b></span><span>${parts.join(" · ")||"—"}</span><span class="muted">${row.note||""}</span></div>`}).join("")}
+async function getFileMeta(path){const res=await api(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}?ref=${BRANCH}`);if(res.status===404)return null;if(!res.ok)throw new Error("Read failed "+res.status);return await res.json()}
+async function saveEntitlements(){const body=JSON.stringify(entitlements,null,2)+"\n";let lastErr=null;for(let i=0;i<3;i++){const meta=await getFileMeta(ENT_PATH);const payload={message:"entitlements update",content:utf8ToBase64(body),branch:BRANCH};if(meta&&meta.sha)payload.sha=meta.sha;const res=await api(`/repos/${REPO_OWNER}/${REPO_NAME}/contents/${ENT_PATH}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(res.ok)return;const err=await res.json().catch(()=>({}));lastErr=err.message||("GitHub "+res.status);if(res.status===409||/does not match/i.test(String(lastErr)))continue;throw new Error(lastErr)}throw new Error(lastErr||"save failed")}
+async function setPayment(state){const msg=$("adminPayMsg");msg.className="msg";if(!authUser||authUser.login!==ADMIN_LOGIN||authMode!=="admin"){msg.className="msg err";msg.textContent="Admin only.";return}const user=$("payUser").value.trim().replace(/^@/,"");const product=$("payProduct").value;const note=$("payNote").value.trim();if(!user){msg.className="msg err";msg.textContent="Username required.";return}msg.textContent="Saving…";try{if(!entitlements.users)entitlements.users={};const key=user.toLowerCase();if(!entitlements.users[key])entitlements.users[key]={login:user};entitlements.users[key][product]=state;entitlements.users[key].note=note;entitlements.users[key].updatedAt=new Date().toISOString();entitlements.users[key].updatedBy=authUser.login;await saveEntitlements();renderEntList();msg.className="msg ok";msg.textContent=(state==="paid"?"Pay it → ":"Reject it → ")+user+" / "+product}catch(e){msg.className="msg err";msg.textContent=e.message||String(e)}}
+$("btnPayIt").onclick=()=>setPayment("paid");
+$("btnRejectIt").onclick=()=>setPayment("rejected");
+$("btnReloadEnt").onclick=async()=>{$("adminPayMsg").textContent="Reloading…";await loadEntitlements();$("adminPayMsg").className="msg ok";$("adminPayMsg").textContent="Reloaded"};
+
+function deliver(key,outId,msgId){
+  const cfg=CONFIGS[key], msg=$(msgId), out=$(outId);
+  msg.className="msg"; out.classList.add("hidden");
+  let payload=cfg.body;
+  if(cfg.require==="free"){
+    if(!authUser){ msg.className="msg err"; msg.textContent="Sign in with GitHub to unlock this free config."; openLoginModal(); return; }
+    const gate=canClaimFree(cfg.freeKey);
+    if(!gate.ok){ msg.className="msg err"; msg.textContent="Free locked — "+gate.reason; refreshFreeUI(); return; }
+    const slot=freeSlot(cfg.freeKey);
+    if(!(slot.expiresAt>Date.now())) claimFreeWindow(cfg.freeKey);
+    payload=FREE_TIME_TAG+cfg.body;
+  } else if(cfg.require==="paid"){
+    if(!authUser){ msg.className="msg err"; msg.textContent="Sign in with GitHub."; openLoginModal(); return; }
+    if(!hasPaid(authUser.login, cfg.product)){ msg.className="msg err"; msg.textContent="Not unlocked. Pay in Discord + admin Pay it."; return; }
+  }
+  out.textContent=payload; out.classList.remove("hidden");
+  msg.className="msg ok";
+  msg.textContent=cfg.require==="free"?cfg.name+" ready (12h) — import in script.":cfg.name+" ready.";
+  if(navigator.clipboard) navigator.clipboard.writeText(payload).then(()=>{
+    msg.textContent=cfg.name+(cfg.require==="free"?" copied (12h free).":" copied.");
+  }).catch(()=>{});
+  refreshFreeUI();
+}
+$("btnRage1").onclick=()=>deliver("rage1","outRage","msgRage");
+$("btnRage2").onclick=()=>deliver("rage2","outRage","msgRage");
+$("btnLegit1").onclick=()=>deliver("legit1","outLegit","msgLegit");
+$("btnLegit2").onclick=()=>deliver("legit2","outLegit","msgLegit");
+$("btnRageAd").onclick=()=>watchFreeAd("rage1","msgRage");
+$("btnLegitAd").onclick=()=>watchFreeAd("legit1","msgLegit");
+
+tryRestore();
+loadEntitlements();
+loadIssues();
+refreshFreeUI();
+setInterval(refreshFreeUI, 15000);
+if(location.hash==="#configs") switchMain("configs");
+if(location.hash==="#admin") switchMain("admin");
+if(location.hash==="#bugs") switchMain("bugs");
+window.addEventListener("hashchange", ()=>{
+  if(location.hash==="#configs") switchMain("configs");
+  if(location.hash==="#bugs") switchMain("bugs");
+  if(location.hash==="#admin") switchMain("admin");
+});
+
+
+/* lo-fi player + ambient */
+(function(){
+  const TRACKS = [
+    "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Algorithms.mp3",
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+  ];
+  const KEY = "fw_lofi_on";
+  const audio = new Audio();
+  audio.loop = true;
+  audio.preload = "none";
+  audio.volume = 0.28;
+  let idx = 0;
+  let unlocked = false;
+  const btn = document.getElementById("musicToggle");
+  const label = document.getElementById("musicLabel");
+  if(!btn || !label) return;
+
+  function setSrc(i){
+    idx = i % TRACKS.length;
+    audio.src = TRACKS[idx];
+  }
+  setSrc(0);
+
+  audio.addEventListener("error", ()=>{
+    if(idx < TRACKS.length - 1){
+      setSrc(idx + 1);
+      if(unlocked) audio.play().catch(()=>{});
+    }
+  });
+
+  function setUI(on){
+    btn.classList.toggle("off", !on);
+    label.textContent = on ? "lo-fi on" : "lo-fi off";
+  }
+
+  async function play(){
+    unlocked = true;
+    try{
+      await audio.play();
+      localStorage.setItem(KEY, "1");
+      setUI(true);
+    }catch(e){
+      setUI(false);
+    }
+  }
+  function pause(){
+    audio.pause();
+    localStorage.setItem(KEY, "0");
+    setUI(false);
+  }
+
+  btn.addEventListener("click", ()=>{
+    if(audio.paused) play();
+    else pause();
+  });
+
+  // resume preference after a gesture if needed
+  if(localStorage.getItem(KEY) === "1"){
+    // browsers block autoplay; wait first interaction
+    const resume = ()=>{ play(); window.removeEventListener("pointerdown", resume); window.removeEventListener("keydown", resume); };
+    window.addEventListener("pointerdown", resume, {once:true});
+    window.addEventListener("keydown", resume, {once:true});
+    setUI(true); // optimistic until blocked
+  }
+})();
+
+</script>
+</body>
+</html>
